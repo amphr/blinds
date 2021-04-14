@@ -39,7 +39,9 @@ pub(crate) fn window_event(event: WindowEvent, window: &WindowContents) -> Optio
             Event::PointerEntered(PointerEnteredEvent(PointerId(device_id)))
         }
         CursorLeft { device_id, .. } => Event::PointerLeft(PointerLeftEvent(PointerId(device_id))),
-        MouseWheel { delta, .. } => Event::ScrollInput(delta.into()),
+        MouseWheel { delta, .. } => {
+            Event::ScrollInput(delta.into())
+        }
         MouseInput {
             device_id,
             button,
@@ -51,6 +53,25 @@ pub(crate) fn window_event(event: WindowEvent, window: &WindowContents) -> Optio
             is_down: state == ElementState::Pressed,
         }),
         ModifiersChanged(state) => Event::ModifiersChanged(convert_modifiers(state)),
+        WindowEvent::Touch(e) => {
+            use glutin::event::TouchPhase::*;
+            match e.phase {
+                Started => Event::PointerInput(PointerInputEvent {
+                    id: PointerId(e.device_id),
+                    button: MouseButton::Left,
+                    is_down: true,
+                }),
+                Moved => Event::PointerMoved(PointerMovedEvent {
+                    id: PointerId(e.device_id),
+                    location: pp_to_logical_vec(e.location, window.scale()),
+                }),
+                Ended | Cancelled => Event::PointerInput(PointerInputEvent {
+                    id: PointerId(e.device_id),
+                    button: MouseButton::Left,
+                    is_down: false,
+                }),
+            }
+        }
         _ => return None,
     })
 }
