@@ -50,6 +50,7 @@ pub(crate) fn window_event(event: WindowEvent, window: &WindowContents) -> Optio
         } => Event::PointerInput(PointerInputEvent {
             id: PointerId(device_id),
             button: button.into(),
+            location: None,
             is_down: state == ElementState::Pressed,
         }),
         ModifiersChanged(state) => Event::ModifiersChanged(convert_modifiers(state)),
@@ -59,6 +60,7 @@ pub(crate) fn window_event(event: WindowEvent, window: &WindowContents) -> Optio
                 Started => Event::PointerInput(PointerInputEvent {
                     id: PointerId(e.device_id),
                     button: MouseButton::Left,
+                    location: Some(pp_to_logical_vec(e.location, window.scale())),
                     is_down: true,
                 }),
                 Moved => Event::PointerMoved(PointerMovedEvent {
@@ -68,6 +70,7 @@ pub(crate) fn window_event(event: WindowEvent, window: &WindowContents) -> Optio
                 Ended | Cancelled => Event::PointerInput(PointerInputEvent {
                     id: PointerId(e.device_id),
                     button: MouseButton::Left,
+                    location: Some(pp_to_logical_vec(e.location, window.scale())),
                     is_down: false,
                 }),
             }

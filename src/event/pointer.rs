@@ -53,6 +53,7 @@ impl PointerMovedEvent {
 pub struct PointerInputEvent {
     pub(crate) id: PointerId,
     pub(crate) button: MouseButton,
+    pub(crate) location: Option<Vector2<f32>>,
     pub(crate) is_down: bool,
 }
 
