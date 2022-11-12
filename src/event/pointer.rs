@@ -66,6 +66,10 @@ impl PointerInputEvent {
         self.button
     }
 
+    pub fn location(&self) -> Option<Vector2<f32>> {
+        self.location
+    }
+
     /// If the button is now down, either repeating or down for the first time
     pub fn is_down(&self) -> bool {
         self.is_down
