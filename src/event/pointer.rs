@@ -53,6 +53,7 @@ impl PointerMovedEvent {
 pub struct PointerInputEvent {
     pub(crate) id: PointerId,
     pub(crate) button: MouseButton,
+    pub(crate) location: Option<Vector2<f32>>,
     pub(crate) is_down: bool,
 }
 
@@ -63,6 +64,10 @@ impl PointerInputEvent {
 
     pub fn button(&self) -> MouseButton {
         self.button
+    }
+
+    pub fn location(&self) -> Option<Vector2<f32>> {
+        self.location
     }
 
     /// If the button is now down, either repeating or down for the first time

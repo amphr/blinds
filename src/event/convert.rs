@@ -48,9 +48,31 @@ pub(crate) fn window_event(event: WindowEvent, window: &WindowContents) -> Optio
         } => Event::PointerInput(PointerInputEvent {
             id: PointerId(device_id),
             button: button.into(),
+            location: None,
             is_down: state == ElementState::Pressed,
         }),
         ModifiersChanged(state) => Event::ModifiersChanged(convert_modifiers(state)),
+        WindowEvent::Touch(e) => {
+            use winit::event::TouchPhase::*;
+            match e.phase {
+                Started => Event::PointerInput(PointerInputEvent {
+                    id: PointerId(e.device_id),
+                    button: MouseButton::Left,
+                    location: Some(pp_to_logical_vec(e.location, window.scale())),
+                    is_down: true,
+                }),
+                Moved => Event::PointerMoved(PointerMovedEvent {
+                    id: PointerId(e.device_id),
+                    location: pp_to_logical_vec(e.location, window.scale()),
+                }),
+                Ended | Cancelled => Event::PointerInput(PointerInputEvent {
+                    id: PointerId(e.device_id),
+                    button: MouseButton::Left,
+                    location: Some(pp_to_logical_vec(e.location, window.scale())),
+                    is_down: false,
+                }),
+            }
+        }
         _ => return None,
     })
 }
