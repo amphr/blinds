@@ -1,7 +1,7 @@
 [package]
 name = "blinds"
 description = "Wrap an async abstraction over a window"
-version = "0.2.0"
+version = "0.1.4"
 authors = ["Ryan Goldstein <ryan@ryanisaacg.com>"]
 categories = ["game-development", "web-programming"]
 keywords = ["async", "window"]
@@ -19,25 +19,31 @@ default = ["favicon", "gamepad"]
 event-cache = ["enum-map", "rustc-hash"]
 favicon = ["image"]
 gamepad = ["gilrs"]
+gl = ["glow", "glutin"]
+stdweb = ["std_web", "webgl_stdweb", "winit/stdweb", "glow/stdweb"]
+web-sys = ["wasm-bindgen", "web_sys", "winit/web-sys", "glow/web-sys"]
 
 [dependencies]
 enum-map = { version = "0.6.2", default-features = false, optional = true }
 futures-util = { version = "0.3.1", default-features = false }
-futures-executor = { version = "0.3.1", default-features = false, features = ["std"] }
-gilrs = { version = "0.8", optional = true }
-image = { version = "0.23", optional = true, default-features = false }
+futures-executor = { version = "0.3.1", default-features = false, features = [
+    "std",
+] }
+glow = { version = "0.4.0", default-features = false, optional = true }
+gilrs = { version = "0.7", optional = true }
+image = { version = "0.22.3", optional = true, default-features = false }
 mint = "0.5"
-rustc-hash = { version = "1.1.0", optional = true }
+rustc-hash = { version = "1.0", optional = true }
+std_web = { version = "0.4.20", package = "stdweb", optional = true }
+wasm-bindgen = { version = "0.2", optional = true }
+webgl_stdweb = { version = "0.3.0", optional = true }
+web_sys = { version = "0.3.22", package = "web-sys", optional = true, features = [
+    "HtmlHeadElement",
+] }
+winit = { version = "0.24.0" }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-glutin = "0.26.0"
-winit = "0.24.0"
-
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-js-sys = "0.3.22"
-wasm-bindgen = "0.2"
-web-sys = { version = "0.3.22", features = ["HtmlHeadElement", "WebGlRenderingContext"] }
-winit = { version = "0.24.0", features = ["web-sys"] }
+glutin = { version = "0.26.0", optional = true }
 
 [[example]]
 name = "cache"
